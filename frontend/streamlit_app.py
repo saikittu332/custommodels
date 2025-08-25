@@ -35,19 +35,25 @@ for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
+# General file upload (any format)
+st.subheader("Upload a file (any format)")
+uploaded_file = st.file_uploader("Choose a file to upload", type=None)
+if uploaded_file is not None:
+    st.success(f"File '{uploaded_file.name}' uploaded successfully.")
+    # You can add further processing for the file here
+
+## Voice chat removed: Streamlit does not natively support live voice chat. Use file upload for audio or other formats instead.
+
 # Accept user input with chat_input (do NOT use `with` here)
 user_question = st.chat_input("Ask your question here...")
 
 if user_question:
     # Add user message to chat history
     st.session_state.messages.append({"role": "user", "content": user_question, "client": client})
-    
     # Get response from backend
     answer = send_question(client, user_question)
-    
     # Add assistant response to chat history
     st.session_state.messages.append({"role": "assistant", "content": answer, "client": client})
-    
     # Display the user message and assistant answer immediately
     with st.chat_message("user"):
         st.markdown(user_question)
