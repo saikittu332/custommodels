@@ -1,0 +1,7 @@
+Tech Company IT Support Policies:
+
+- Users must change passwords every 90 days.
+- VPN setup instructions can be found on the intranet.
+- For software installation, contact IT helpdesk.
+- Common issues include WiFi connectivity and printer setup.
+- IT helpdesk hours: Monday to Friday, 9 am - 6 pm.
