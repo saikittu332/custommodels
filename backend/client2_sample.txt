@@ -1,7 +1,0 @@
-Health Clinic Patient FAQs:
-
-- Appointments can be booked online or by phone.
-- Clinic hours: 8 am to 5 pm Monday through Friday.
-- Walk-ins are accepted only on Saturdays.
-- Patients should bring insurance cards and ID.
-- For cancellations, please call 24 hours in advance.
