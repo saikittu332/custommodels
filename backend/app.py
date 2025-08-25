@@ -6,7 +6,7 @@ import shutil
 from typing import List, Optional
 import asyncio
 
-from rag import build_embeddings_for_client, answer_question
+from .rag_main import build_embeddings_for_client, answer_question
 
 app = FastAPI()
 
