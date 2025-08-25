@@ -1,61 +1,71 @@
 import streamlit as st
 import requests
 
-# You can hardcode your backend API URL or get from secrets
+# Backend config
 API_URL = "http://localhost:8000"
-OPENAI_API_KEY = st.secrets.get("OPENAI_API_KEY", "")
+st.set_page_config(page_title="Custom AI Bots", layout="centered")
 
-st.title("Custom AI Bots Demo — Tech IT Support & Health Clinic")
+# App title and bot selector
+st.title("Custom AI Bots — Tech & Health")
 
-# Initialize chat history in session state
-if "messages" not in st.session_state:
-    st.session_state.messages = []
-
-# Select client bot
 client = st.selectbox(
-    "Choose AI Bot (Client)",
+    "Select a Bot",
     options=["client1", "client2"],
     format_func=lambda x: "Tech Company IT Support Bot" if x == "client1" else "Health Clinic FAQ Bot"
 )
 
+# Initialize chat messages
+if "messages" not in st.session_state:
+    st.session_state.messages = []
+
+# Backend call function
 def send_question(client_id, question):
-    """Call backend API to get AI answer"""
     try:
         response = requests.post(f"{API_URL}/ask/", json={"client_id": client_id, "question": question})
         if response.status_code == 200:
             return response.json().get("answer", "No answer received.")
         else:
-            return "Error from backend: " + response.text
+            return f"Error: {response.status_code} - {response.text}"
     except Exception as e:
         return f"API request failed: {e}"
 
-# Display existing messages for chosen client
+# Display chat messages for the selected client
+st.divider()
 for msg in st.session_state.messages:
     if msg["client"] == client:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
-# General file upload (any format)
-st.subheader("Upload a file (any format)")
-uploaded_file = st.file_uploader("Choose a file to upload", type=None)
-if uploaded_file is not None:
-    st.success(f"File '{uploaded_file.name}' uploaded successfully.")
-    # You can add further processing for the file here
+# Compact file uploader (optional)
+with st.container():
+    uploaded_file = st.file_uploader("Upload a file (optional)", type=None, label_visibility="collapsed")
+    if uploaded_file:
+        st.toast(f"File uploaded: {uploaded_file.name}", icon="📎")
 
-## Voice chat removed: Streamlit does not natively support live voice chat. Use file upload for audio or other formats instead.
+# Chat input at the bottom (always at root)
+user_input = st.chat_input("Type your question here...")
 
-# Accept user input with chat_input (do NOT use `with` here)
-user_question = st.chat_input("Ask your question here...")
+# Process user input
+if user_input:
+    # Append user message
+    st.session_state.messages.append({
+        "role": "user",
+        "content": user_input,
+        "client": client
+    })
 
-if user_question:
-    # Add user message to chat history
-    st.session_state.messages.append({"role": "user", "content": user_question, "client": client})
-    # Get response from backend
-    answer = send_question(client, user_question)
-    # Add assistant response to chat history
-    st.session_state.messages.append({"role": "assistant", "content": answer, "client": client})
-    # Display the user message and assistant answer immediately
+    # Call backend
+    bot_reply = send_question(client, user_input)
+
+    # Append assistant reply
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": bot_reply,
+        "client": client
+    })
+
+    # Display messages immediately
     with st.chat_message("user"):
-        st.markdown(user_question)
+        st.markdown(user_input)
     with st.chat_message("assistant"):
-        st.markdown(answer)
+        st.markdown(bot_reply)

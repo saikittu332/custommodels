@@ -11,7 +11,7 @@ from openai import OpenAI  # updated import
 EMBEDDING_MODEL_NAME = "all-MiniLM-L6-v2"
 embedder = SentenceTransformer(EMBEDDING_MODEL_NAME)
 
-OPENAI_API_KEY = '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'
+OPENAI_API_KEY = 'test_key'
 client = OpenAI(api_key=OPENAI_API_KEY)  # instantiate client
 
 DATA_DIR = "backend/data"
