@@ -40,7 +40,8 @@ for msg in st.session_state.messages:
 with st.container():
     uploaded_file = st.file_uploader("Upload a file (optional)", type=None, label_visibility="collapsed")
     if uploaded_file:
-        st.toast(f"File uploaded: {uploaded_file.name}", icon="📎")
+        # Streamlit versions may not implement `st.toast`; use `st.success` which is widely supported.
+        st.success(f"📎 File uploaded: {uploaded_file.name}")
 
 # Chat input at the bottom (always at root)
 user_input = st.chat_input("Type your question here...")
